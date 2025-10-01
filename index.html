@@ -664,25 +664,54 @@
             try {
                 showNotification('📤 Mengirim ke Google Sheets...');
                 
+                // Pastikan URL sudah diisi
+                if (GOOGLE_SCRIPT_URL === 'https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec') {
+                    throw new Error('URL Google Apps Script belum diatur');
+                }
+                
+                // Format data sesuai dengan yang diharapkan Apps Script
+                const formData = new FormData();
+                formData.append('action', 'addReport');
+                formData.append('id', data.id || Date.now());
+                formData.append('timestamp', data.timestamp || new Date().toISOString());
+                formData.append('tanggal', data.tanggal || '');
+                formData.append('waktu', data.waktu || '');
+                formData.append('cabangOlahraga', data.cabangOlahraga || '');
+                formData.append('kategori', data.kategori || '');
+                formData.append('nomorPertandingan', data.nomorPertandingan || '');
+                formData.append('lokasi', data.lokasi || '');
+                formData.append('jumlahPeserta', data.jumlahPeserta || 0);
+                formData.append('jumlahPertandingan', data.jumlahPertandingan || 0);
+                formData.append('hasilPertandingan', data.hasilPertandingan || '');
+                formData.append('catatanTeknis', data.catatanTeknis || '');
+                formData.append('catatanKendala', data.catatanKendala || '');
+                formData.append('rekomendasi', data.rekomendasi || '');
+                formData.append('namaPetugas', data.namaPetugas || '');
+                formData.append('kontakPetugas', data.kontakPetugas || '');
+                formData.append('unitAsal', data.unitAsal || '');
+                
+                console.log('Sending to URL:', GOOGLE_SCRIPT_URL);
+                console.log('Data being sent:', data);
+                
                 const response = await fetch(GOOGLE_SCRIPT_URL, {
                     method: 'POST',
-                    mode: 'no-cors',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        action: 'addReport',
-                        data: data
-                    })
+                    body: formData
                 });
                 
-                // Karena mode no-cors, kita tidak bisa membaca response
-                // Tapi kita asumsikan berhasil jika tidak ada error
-                showNotification('✅ Data berhasil disimpan ke Google Sheets!');
-                return true;
+                console.log('Response status:', response.status);
+                
+                if (response.ok) {
+                    const result = await response.text();
+                    console.log('Response text:', result);
+                    showNotification('✅ Data berhasil disimpan ke Google Sheets!');
+                    return true;
+                } else {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
             } catch (error) {
                 console.error('Error sending to Google Sheets:', error);
-                showNotification('❌ Gagal mengirim ke Google Sheets. Data disimpan lokal.');
+                showNotification('❌ Gagal mengirim ke Google Sheets: ' + error.message);
                 return false;
             }
         }
@@ -883,22 +912,31 @@
             submitBtn.disabled = true;
             
             try {
-                // Collect form data
-                const formData = new FormData(this);
-                const reportData = {};
-                for (let [key, value] of formData.entries()) {
-                    reportData[key] = value;
-                }
+                // Collect form data dengan cara yang lebih eksplisit
+                const reportData = {
+                    id: Date.now(),
+                    timestamp: new Date().toISOString(),
+                    tanggal: document.getElementById('tanggal').value,
+                    waktu: document.getElementById('waktu').value,
+                    cabangOlahraga: document.getElementById('cabangOlahraga').value,
+                    kategori: document.getElementById('kategori').value,
+                    nomorPertandingan: document.getElementById('nomorPertandingan').value,
+                    lokasi: document.getElementById('lokasi').value,
+                    jumlahPeserta: parseInt(document.getElementById('jumlahPeserta').value) || 0,
+                    jumlahPertandingan: parseInt(document.getElementById('jumlahPertandingan').value) || 0,
+                    hasilPertandingan: document.getElementById('hasilPertandingan').value,
+                    catatanTeknis: document.getElementById('catatanTeknis').value,
+                    catatanKendala: document.getElementById('catatanKendala').value || '',
+                    rekomendasi: document.getElementById('rekomendasi').value,
+                    namaPetugas: document.getElementById('namaPetugas').value,
+                    kontakPetugas: document.getElementById('kontakPetugas').value,
+                    unitAsal: document.getElementById('unitAsal').value || ''
+                };
                 
-                // Tambahkan timestamp dan ID
-                reportData.id = Date.now();
-                reportData.timestamp = new Date().toISOString();
+                console.log('Sending data to Google Sheets:', reportData); // Debug log
                 
-                // Coba kirim ke Google Sheets dulu
-                let success = false;
-                if (isOnline) {
-                    success = await sendToGoogleSheets(reportData);
-                }
+                // Kirim ke Google Sheets dengan format yang benar
+                const success = await sendToGoogleSheets(reportData);
                 
                 // Simpan lokal sebagai backup
                 addNewReport(reportData);
@@ -906,7 +944,7 @@
                 if (success) {
                     alert('✅ Laporan Monev berhasil dikirim ke Google Sheets!\n\nTerima kasih atas kontribusi Anda dalam monitoring PORPROV KALSEL.');
                 } else {
-                    alert('⚠️ Laporan disimpan lokal. Akan otomatis tersinkron saat online.\n\nTerima kasih atas kontribusi Anda dalam monitoring PORPROV KALSEL.');
+                    alert('⚠️ Laporan disimpan lokal. Periksa koneksi internet dan URL Google Apps Script.\n\nTerima kasih atas kontribusi Anda dalam monitoring PORPROV KALSEL.');
                 }
                 
                 // Clear form and localStorage
@@ -1340,8 +1378,5 @@ Unit: ${report.unitAsal || '-'}
             document.body.appendChild(statusIndicator);
         });
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'987b23e062edfd1c',t:'MTc1OTMxMzExMS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'987bfc96d4ed3fb9',t:'MTc1OTMyMTk4OC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
-
-
-
