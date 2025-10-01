@@ -1,0 +1,1361 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KONI Kabupaten Tapin</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+        body { 
+            font-family: 'Inter', sans-serif; 
+            box-sizing: border-box; 
+        }
+        .gradient-bg { 
+            background: linear-gradient(135deg, #1e40af 0%, #3b82f6 50%, #60a5fa 100%); 
+        }
+        .card-hover { 
+            transition: all 0.3s ease; 
+        }
+        .card-hover:hover { 
+            transform: translateY(-2px); 
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1); 
+        }
+        .tab-active { 
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8); 
+            color: white; 
+        }
+        .countdown-item { 
+            background: rgba(255, 255, 255, 0.1); 
+            backdrop-filter: blur(10px); 
+        }
+        .news-ticker {
+            animation: scroll 30s linear infinite;
+        }
+        @keyframes scroll {
+            0% { transform: translateX(100%); }
+            100% { transform: translateX(-100%); }
+        }
+        .medal-shine {
+            background: linear-gradient(45deg, #ffd700, #ffed4e, #ffd700);
+            background-size: 200% 200%;
+            animation: shine 2s ease-in-out infinite;
+        }
+        @keyframes shine {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-slate-900 via-indigo-900 to-blue-900">
+    <!-- Header -->
+    <header class="gradient-bg text-white shadow-lg sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-6">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <div class="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center ring-4 ring-white/20">
+                        <span class="text-3xl">🏆</span>
+                    </div>
+                    <div>
+                        <h1 class="text-3xl font-bold">KONI KABUPATEN TAPIN</h1>
+                        <p class="text-blue-100 mt-1">Komite Olahraga Nasional Indonesia Kabupaten Tapin</p>
+                    </div>
+                </div>
+                <div class="hidden md:flex items-center space-x-6">
+                    <div class="text-center">
+                        <div class="text-2xl font-bold" id="current-date"></div>
+                        <div class="text-sm text-blue-100">Hari Ini</div>
+                    </div>
+                    <a href="admin.html" class="bg-white/20 hover:bg-white/30 px-4 py-2 rounded-lg text-sm font-medium transition-colors">
+                        ⚙️ Admin Panel
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- News Ticker -->
+    <div class="bg-red-600 text-white py-2 overflow-hidden">
+        <div class="news-ticker whitespace-nowrap">
+            <span class="inline-block px-8">🔥 BREAKING: Tim Renang Banjarmasin Raih 3 Medali Emas! • 🏆 Klasemen Sementara: Banjarmasin Memimpin dengan 15 Emas • ⚡ Jadwal Hari Ini: Final Sepak Bola Putra 19.00 WIB • 🎯 Target Kalsel: 200 Medali Emas di Porprov 2025</span>
+        </div>
+    </div>
+
+    <!-- Countdown Section -->
+    <section class="py-12">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-8">
+                <h2 class="text-4xl font-bold text-white mb-4">Countdown Porprov 2025</h2>
+                <p class="text-blue-100 text-lg">Menuju pembukaan resmi Pekan Olahraga Provinsi Kalimantan Selatan</p>
+            </div>
+            
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto">
+                <div class="countdown-item rounded-lg p-6 text-center text-white">
+                    <div class="text-4xl font-bold mb-2" id="days">00</div>
+                    <div class="text-sm uppercase tracking-wide">Hari</div>
+                </div>
+                <div class="countdown-item rounded-lg p-6 text-center text-white">
+                    <div class="text-4xl font-bold mb-2" id="hours">00</div>
+                    <div class="text-sm uppercase tracking-wide">Jam</div>
+                </div>
+                <div class="countdown-item rounded-lg p-6 text-center text-white">
+                    <div class="text-4xl font-bold mb-2" id="minutes">00</div>
+                    <div class="text-sm uppercase tracking-wide">Menit</div>
+                </div>
+                <div class="countdown-item rounded-lg p-6 text-center text-white">
+                    <div class="text-4xl font-bold mb-2" id="seconds">00</div>
+                    <div class="text-sm uppercase tracking-wide">Detik</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Navigation Tabs -->
+    <nav class="bg-white shadow-sm sticky top-20 z-40">
+        <div class="container mx-auto px-4">
+            <div class="flex overflow-x-auto">
+                <button onclick="showTab('beranda')" id="tab-beranda" class="tab-button px-6 py-4 font-medium text-gray-600 hover:text-blue-600 whitespace-nowrap tab-active">
+                    🏠 Beranda
+                </button>
+                <button onclick="showTab('berita')" id="tab-berita" class="tab-button px-6 py-4 font-medium text-gray-600 hover:text-blue-600 whitespace-nowrap">
+                    📰 Berita
+                </button>
+                <button onclick="showTab('medali')" id="tab-medali" class="tab-button px-6 py-4 font-medium text-gray-600 hover:text-blue-600 whitespace-nowrap">
+                    🏆 Klasemen Medali
+                </button>
+                <button onclick="showTab('jadwal')" id="tab-jadwal" class="tab-button px-6 py-4 font-medium text-gray-600 hover:text-blue-600 whitespace-nowrap">
+                    📅 Jadwal
+                </button>
+                <button onclick="showTab('venue')" id="tab-venue" class="tab-button px-6 py-4 font-medium text-gray-600 hover:text-blue-600 whitespace-nowrap">
+                    🏟️ Venue
+                </button>
+                <button onclick="showTab('statistik')" id="tab-statistik" class="tab-button px-6 py-4 font-medium text-gray-600 hover:text-blue-600 whitespace-nowrap">
+                    📊 Statistik
+                </button>
+                <button onclick="showTab('layanan')" id="tab-layanan" class="tab-button px-6 py-4 font-medium text-gray-600 hover:text-blue-600 whitespace-nowrap">
+                    🏥 Layanan
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-8">
+        <!-- Beranda Tab -->
+        <div id="content-beranda" class="tab-content">
+            <!-- Hero Stats -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                <div class="bg-white rounded-lg shadow-md p-6 text-center card-hover">
+                    <div class="text-3xl mb-2">🏅</div>
+                    <div class="text-2xl font-bold text-gray-800" id="total-medali">156</div>
+                    <div class="text-gray-600">Total Medali</div>
+                </div>
+                <div class="bg-white rounded-lg shadow-md p-6 text-center card-hover">
+                    <div class="text-3xl mb-2">🏃‍♂️</div>
+                    <div class="text-2xl font-bold text-gray-800">2,847</div>
+                    <div class="text-gray-600">Total Atlet</div>
+                </div>
+                <div class="bg-white rounded-lg shadow-md p-6 text-center card-hover">
+                    <div class="text-3xl mb-2">🏟️</div>
+                    <div class="text-2xl font-bold text-gray-800" id="total-venue">29</div>
+                    <div class="text-gray-600">Venue Pertandingan</div>
+                </div>
+                <div class="bg-white rounded-lg shadow-md p-6 text-center card-hover">
+                    <div class="text-3xl mb-2">🎯</div>
+                    <div class="text-2xl font-bold text-gray-800">47</div>
+                    <div class="text-gray-600">Cabang Olahraga</div>
+                </div>
+            </div>
+
+            <!-- Top 3 Medali -->
+            <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+                <h3 class="text-2xl font-bold mb-6 text-center">🏆 Top 3 Klasemen Medali</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="text-center">
+                        <div class="medal-shine rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-4">
+                            <span class="text-3xl">🥇</span>
+                        </div>
+                        <h4 class="font-bold text-lg" id="rank-1-name">Banjarmasin</h4>
+                        <div class="text-2xl font-bold text-yellow-600" id="rank-1-total">35</div>
+                        <div class="text-sm text-gray-600">Total Medali</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="bg-gray-300 rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-4">
+                            <span class="text-3xl">🥈</span>
+                        </div>
+                        <h4 class="font-bold text-lg" id="rank-2-name">Banjarbaru</h4>
+                        <div class="text-2xl font-bold text-gray-600" id="rank-2-total">31</div>
+                        <div class="text-sm text-gray-600">Total Medali</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="bg-orange-400 rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-4">
+                            <span class="text-3xl">🥉</span>
+                        </div>
+                        <h4 class="font-bold text-lg" id="rank-3-name">Tapin</h4>
+                        <div class="text-2xl font-bold text-orange-600" id="rank-3-total">21</div>
+                        <div class="text-sm text-gray-600">Total Medali</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Berita Terkini Preview -->
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-2xl font-bold">📰 Berita Terkini</h3>
+                    <button onclick="showTab('berita')" class="text-blue-600 hover:text-blue-800 font-medium">Lihat Semua →</button>
+                </div>
+                <div id="berita-preview" class="space-y-4">
+                    <!-- Berita preview akan ditampilkan di sini -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Berita Tab -->
+        <div id="content-berita" class="tab-content hidden">
+            <div class="mb-6">
+                <h2 class="text-3xl font-bold text-white mb-2">📰 Berita Terkini</h2>
+                <p class="text-blue-100">Update terbaru seputar Porprov Kalimantan Selatan 2025</p>
+            </div>
+
+            <!-- Filter Berita -->
+            <div class="bg-white rounded-lg shadow-md p-4 mb-6">
+                <div class="flex flex-wrap gap-2">
+                    <button onclick="filterBerita('SEMUA')" class="filter-btn bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium">Semua</button>
+                    <button onclick="filterBerita('RENANG')" class="filter-btn bg-gray-200 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium">Renang</button>
+                    <button onclick="filterBerita('SEPAK BOLA')" class="filter-btn bg-gray-200 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium">Sepak Bola</button>
+                    <button onclick="filterBerita('ATLETIK')" class="filter-btn bg-gray-200 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium">Atletik</button>
+                    <button onclick="filterBerita('BASKET')" class="filter-btn bg-gray-200 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium">Basket</button>
+                    <button onclick="filterBerita('UMUM')" class="filter-btn bg-gray-200 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium">Umum</button>
+                </div>
+            </div>
+
+            <!-- Daftar Berita -->
+            <div id="daftar-berita" class="space-y-6">
+                <!-- Berita akan ditampilkan di sini -->
+            </div>
+        </div>
+
+        <!-- Medali Tab -->
+        <div id="content-medali" class="tab-content hidden">
+            <div class="mb-6">
+                <h2 class="text-3xl font-bold text-white mb-2">🏆 Klasemen Medali</h2>
+                <p class="text-blue-100">Perolehan medali per kabupaten/kota</p>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead class="gradient-bg text-white">
+                            <tr>
+                                <th class="px-6 py-4 text-left">Peringkat</th>
+                                <th class="px-6 py-4 text-left">Kabupaten/Kota</th>
+                                <th class="px-6 py-4 text-center">🥇 Emas</th>
+                                <th class="px-6 py-4 text-center">🥈 Perak</th>
+                                <th class="px-6 py-4 text-center">🥉 Perunggu</th>
+                                <th class="px-6 py-4 text-center">Total</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabel-medali">
+                            <!-- Data medali akan ditampilkan di sini -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Jadwal Tab -->
+        <div id="content-jadwal" class="tab-content hidden">
+            <div class="mb-6">
+                <h2 class="text-3xl font-bold text-white mb-2">📅 Jadwal Pertandingan</h2>
+                <p class="text-blue-100">Jadwal lengkap pertandingan Porprov Kalsel 2025</p>
+            </div>
+
+            <!-- Filter Tanggal -->
+            <div class="bg-white rounded-lg shadow-md p-4 mb-6">
+                <div class="flex flex-wrap gap-4 items-center">
+                    <label class="font-medium">Filter Tanggal:</label>
+                    <input type="date" id="filter-tanggal" class="px-3 py-2 border border-gray-300 rounded-lg">
+                    <button onclick="filterJadwal()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg">Filter</button>
+                    <button onclick="resetFilterJadwal()" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg">Reset</button>
+                </div>
+            </div>
+
+            <!-- Daftar Jadwal -->
+            <div id="daftar-jadwal" class="space-y-4">
+                <!-- Jadwal akan ditampilkan di sini -->
+            </div>
+        </div>
+
+        <!-- Venue Tab -->
+        <div id="content-venue" class="tab-content hidden">
+            <div class="mb-6">
+                <h2 class="text-3xl font-bold text-white mb-2">🏟️ Venue Pertandingan</h2>
+                <p class="text-blue-100">Lokasi-lokasi penyelenggaraan Porprov Kalsel 2025</p>
+            </div>
+
+            <!-- Search Venue -->
+            <div class="bg-white rounded-lg shadow-md p-4 mb-6">
+                <div class="flex gap-4">
+                    <input type="text" id="search-venue" placeholder="Cari venue atau cabang olahraga..." class="flex-1 px-4 py-2 border border-gray-300 rounded-lg">
+                    <button onclick="searchVenue()" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg">🔍 Cari</button>
+                </div>
+            </div>
+
+            <!-- Daftar Venue -->
+            <div id="daftar-venue" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Venue akan ditampilkan di sini -->
+            </div>
+        </div>
+
+        <!-- Layanan Tab -->
+        <div id="content-layanan" class="tab-content hidden">
+            <div class="mb-6">
+                <h2 class="text-3xl font-bold text-white mb-2">🏥 Layanan KONI Tapin</h2>
+                <p class="text-blue-100">Informasi kontak layanan dan tim pendukung KONI Kabupaten Tapin</p>
+            </div>
+
+            <!-- Filter Layanan -->
+            <div class="bg-white rounded-lg shadow-md p-4 mb-6">
+                <div class="flex flex-wrap gap-2">
+                    <button onclick="filterLayanan('SEMUA')" class="filter-layanan-btn bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium">Semua</button>
+                    <button onclick="filterLayanan('SEKRETARIAT')" class="filter-layanan-btn bg-gray-200 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium">Sekretariat</button>
+                    <button onclick="filterLayanan('TIM KESEHATAN')" class="filter-layanan-btn bg-gray-200 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium">Tim Kesehatan</button>
+                    <button onclick="filterLayanan('KEAMANAN')" class="filter-layanan-btn bg-gray-200 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium">Keamanan</button>
+                    <button onclick="filterLayanan('TIM MONEV')" class="filter-layanan-btn bg-gray-200 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium">Tim Monev</button>
+                    <button onclick="filterLayanan('TRANSPORTASI')" class="filter-layanan-btn bg-gray-200 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium">Transportasi</button>
+                </div>
+            </div>
+
+            <!-- Daftar Layanan -->
+            <div id="daftar-layanan" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Layanan akan ditampilkan di sini -->
+            </div>
+        </div>
+
+        <!-- Statistik Tab -->
+        <div id="content-statistik" class="tab-content hidden">
+            <div class="mb-6">
+                <h2 class="text-3xl font-bold text-white mb-2">📊 Statistik Porprov 2025</h2>
+                <p class="text-blue-100">Data dan analisis performa kabupaten/kota</p>
+            </div>
+
+            <!-- Statistik Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                <div class="bg-white rounded-lg shadow-md p-6 text-center">
+                    <div class="text-3xl mb-2">🏆</div>
+                    <div class="text-2xl font-bold text-yellow-600" id="stat-total-emas">52</div>
+                    <div class="text-gray-600">Total Emas</div>
+                </div>
+                <div class="bg-white rounded-lg shadow-md p-6 text-center">
+                    <div class="text-3xl mb-2">🥈</div>
+                    <div class="text-2xl font-bold text-gray-500" id="stat-total-perak">58</div>
+                    <div class="text-gray-600">Total Perak</div>
+                </div>
+                <div class="bg-white rounded-lg shadow-md p-6 text-center">
+                    <div class="text-3xl mb-2">🥉</div>
+                    <div class="text-2xl font-bold text-orange-600" id="stat-total-perunggu">62</div>
+                    <div class="text-gray-600">Total Perunggu</div>
+                </div>
+                <div class="bg-white rounded-lg shadow-md p-6 text-center">
+                    <div class="text-3xl mb-2">📈</div>
+                    <div class="text-2xl font-bold text-green-600">13</div>
+                    <div class="text-gray-600">Peserta</div>
+                </div>
+            </div>
+
+            <!-- Chart Placeholder -->
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <h3 class="text-xl font-bold mb-4">📈 Grafik Perolehan Medali</h3>
+                <div class="h-64 bg-gray-100 rounded-lg flex items-center justify-center">
+                    <div class="text-center text-gray-500">
+                        <div class="text-4xl mb-2">📊</div>
+                        <p>Grafik akan ditampilkan di sini</p>
+                        <p class="text-sm">Fitur dalam pengembangan</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="gradient-bg text-white mt-16">
+        <div class="container mx-auto px-4 py-12">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <div class="flex items-center space-x-2 mb-4">
+                        <span class="text-2xl">🏆</span>
+                        <span class="font-bold text-lg">KONI KABUPATEN TAPIN</span>
+                    </div>
+                    <p class="text-blue-100 mb-4">Komite Olahraga Nasional Indonesia Kabupaten Tapin - Membangun prestasi olahraga daerah menuju kejayaan nasional.</p>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4">📍 Informasi</h4>
+                    <ul class="space-y-2 text-blue-100">
+                        <li>📅 Tanggal: 15-25 Maret 2025</li>
+                        <li>🏟️ Venue: 29 Lokasi</li>
+                        <li>🏃‍♂️ Atlet: 2,847 Peserta</li>
+                        <li>🎯 Cabor: 47 Cabang</li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4">🔗 Tautan</h4>
+                    <ul class="space-y-2 text-blue-100">
+                        <li><a href="#" class="hover:text-white">Tentang Porprov</a></li>
+                        <li><a href="#" class="hover:text-white">Peraturan</a></li>
+                        <li><a href="#" class="hover:text-white">Kontak</a></li>
+                        <li><a href="admin.html" class="hover:text-white">Admin Panel</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4">📱 Media Sosial</h4>
+                    <div class="flex space-x-4">
+                        <a href="#" class="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center hover:bg-white/30">📘</a>
+                        <a href="#" class="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center hover:bg-white/30">📷</a>
+                        <a href="#" class="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center hover:bg-white/30">🐦</a>
+                        <a href="#" class="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center hover:bg-white/30">📺</a>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-white/20 mt-8 pt-8 text-center text-blue-100">
+                <p>&copy; 2025 KONI Kabupaten Tapin. Semua hak dilindungi.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Data Storage
+        let dataBerita = JSON.parse(localStorage.getItem('porprov-berita') || '[]');
+        let dataMedali = JSON.parse(localStorage.getItem('porprov-medali') || '{}');
+        let dataJadwal = JSON.parse(localStorage.getItem('porprov-jadwal') || '[]');
+        let dataVenue = JSON.parse(localStorage.getItem('porprov-venue') || '[]');
+        let dataLayanan = JSON.parse(localStorage.getItem('koni-layanan') || '[]');
+
+        // Initialize default data
+        if (dataBerita.length === 0) {
+            dataBerita = [
+                {
+                    id: 1,
+                    judul: "Tim Renang Banjarmasin Dominasi Hari Pertama",
+                    kategori: "RENANG",
+                    ringkasan: "Tim renang Kota Banjarmasin berhasil meraih 5 medali emas pada hari pertama kompetisi renang Porprov Kalsel 2025.",
+                    isi: "Prestasi gemilang ditunjukkan oleh tim renang Kota Banjarmasin pada hari pertama kompetisi renang Porprov Kalimantan Selatan 2025. Lima medali emas berhasil diraih dari berbagai nomor yang dipertandingkan di Kolam Renang Tirta Kenanga. Atlet-atlet muda Banjarmasin menunjukkan performa luar biasa dan siap bersaing di tingkat nasional.",
+                    tanggal: "15 Maret 2025"
+                },
+                {
+                    id: 2,
+                    judul: "Upacara Pembukaan Porprov Kalsel 2025 Meriah",
+                    kategori: "UMUM",
+                    ringkasan: "Upacara pembukaan Porprov Kalsel 2025 berlangsung meriah di Stadion Pertasi Kencan dengan dihadiri ribuan penonton.",
+                    isi: "Kemeriahan upacara pembukaan Porprov Kalimantan Selatan 2025 memukau ribuan penonton yang hadir di Stadion Pertasi Kencan. Acara dibuka langsung oleh Gubernur Kalimantan Selatan dan menampilkan pertunjukan budaya yang memukau. Parade atlet dari 13 kabupaten/kota menjadi momen yang paling dinanti.",
+                    tanggal: "14 Maret 2025"
+                },
+                {
+                    id: 3,
+                    judul: "Atlet Sepak Bola Tapin Cetak Rekor Baru",
+                    kategori: "SEPAK BOLA",
+                    ringkasan: "Tim sepak bola Kabupaten Tapin berhasil mencetak rekor kemenangan terbesar dengan skor 8-0 melawan tim lawan.",
+                    isi: "Prestasi luar biasa ditorehkan tim sepak bola Kabupaten Tapin yang berhasil mencetak rekor kemenangan terbesar dalam sejarah Porprov Kalsel dengan skor 8-0. Permainan yang berlangsung di Lapangan Sepak Bola Jorong ini menunjukkan kualitas tinggi sepak bola Tapin yang siap bersaing hingga final.",
+                    tanggal: "16 Maret 2025"
+                }
+            ];
+            localStorage.setItem('porprov-berita', JSON.stringify(dataBerita));
+        }
+
+        // Initialize default medal data
+        if (Object.keys(dataMedali).length === 0) {
+            dataMedali = {
+                'Banjarmasin': { emas: 15, perak: 12, perunggu: 8 },
+                'Banjarbaru': { emas: 12, perak: 10, perunggu: 9 },
+                'Tapin': { emas: 8, perak: 7, perunggu: 6 },
+                'Hulu Sungai Selatan': { emas: 6, perak: 8, perunggu: 5 },
+                'Tanah Laut': { emas: 4, perak: 3, perunggu: 7 },
+                'Balangan': { emas: 3, perak: 5, perunggu: 4 },
+                'Banjar': { emas: 2, perak: 4, perunggu: 6 },
+                'Barito Kuala': { emas: 1, perak: 3, perunggu: 5 },
+                'Hulu Sungai Tengah': { emas: 1, perak: 2, perunggu: 3 },
+                'Hulu Sungai Utara': { emas: 0, perak: 2, perunggu: 4 },
+                'Kotabaru': { emas: 0, perak: 1, perunggu: 2 },
+                'Tabalong': { emas: 0, perak: 1, perunggu: 1 },
+                'Tanah Bumbu': { emas: 0, perak: 0, perunggu: 2 }
+            };
+            localStorage.setItem('porprov-medali', JSON.stringify(dataMedali));
+        }
+
+        // Initialize default schedule data
+        if (dataJadwal.length === 0) {
+            dataJadwal = [
+                {
+                    id: 1,
+                    cabor: "Renang 100m Gaya Bebas Putra",
+                    tanggal: "2025-03-17",
+                    waktu: "09:00",
+                    venue: "Kolam Renang Tirta Kenanga",
+                    keterangan: "Final"
+                },
+                {
+                    id: 2,
+                    cabor: "Sepak Bola Putra",
+                    tanggal: "2025-03-17",
+                    waktu: "15:30",
+                    venue: "Stadion Pertasi Kencan",
+                    keterangan: "Semifinal"
+                },
+                {
+                    id: 3,
+                    cabor: "Basket Putri",
+                    tanggal: "2025-03-18",
+                    waktu: "10:00",
+                    venue: "Gedung Olahraga Pelaihari",
+                    keterangan: "Final"
+                }
+            ];
+            localStorage.setItem('porprov-jadwal', JSON.stringify(dataJadwal));
+        }
+
+        // Initialize default venue data with comprehensive list
+        if (dataVenue.length === 0) {
+            dataVenue = [
+                // KECAMATAN JORONG
+                {
+                    id: 1,
+                    nama: "Gedung Serbaguna Jorong",
+                    lokasi: "Kecamatan Jorong (26 km)",
+                    cabor: ["Gulat", "Samba"],
+                    emoji: "🤼"
+                },
+                {
+                    id: 2,
+                    nama: "Lapangan Sepak Bola Jorong",
+                    lokasi: "Kecamatan Jorong (27 km)",
+                    cabor: ["Sepak Bola"],
+                    emoji: "⚽"
+                },
+                // KECAMATAN BATUAMPAR
+                {
+                    id: 3,
+                    nama: "Bendungan Damit",
+                    lokasi: "Kecamatan Batuampar (25 km)",
+                    cabor: ["Dayung"],
+                    emoji: "🚣"
+                },
+                // KECAMATAN TAKISUNG
+                {
+                    id: 4,
+                    nama: "Pantai Takisung",
+                    lokasi: "Kecamatan Takisung (25 km)",
+                    cabor: ["Voli Pantai"],
+                    emoji: "🏐"
+                },
+                // KECAMATAN PANYIPATAN
+                {
+                    id: 5,
+                    nama: "Pantai Batakan",
+                    lokasi: "Kecamatan Panyipatan (36 km)",
+                    cabor: ["Ski Air"],
+                    emoji: "🎿"
+                },
+                // KECAMATAN BATIBATI
+                {
+                    id: 6,
+                    nama: "Lapangan Futsal Batibati",
+                    lokasi: "Kecamatan Batibati (24 km)",
+                    cabor: ["Futsal"],
+                    emoji: "⚽"
+                },
+                // KECAMATAN PELAIHARI
+                {
+                    id: 7,
+                    nama: "Stadion Pertasi Kencan",
+                    lokasi: "Kecamatan Pelaihari",
+                    cabor: ["Atletik", "Drumband", "Petanque", "Sepak Bola"],
+                    emoji: "🏟️"
+                },
+                {
+                    id: 8,
+                    nama: "Tala Sport RTH Kijang Mas",
+                    lokasi: "Kecamatan Pelaihari",
+                    cabor: ["Mixed Martial Arts (MMA)", "Muaythay"],
+                    emoji: "🥊"
+                },
+                {
+                    id: 9,
+                    nama: "Gedung Olahraga Pelaihari",
+                    lokasi: "Kecamatan Pelaihari",
+                    cabor: ["Basket", "Bulu Tangkis", "Voli"],
+                    emoji: "🏸"
+                },
+                {
+                    id: 10,
+                    nama: "RTH Kijang Mas Permai",
+                    lokasi: "Kecamatan Pelaihari",
+                    cabor: ["Panjat Tebing", "Panahan", "Berkuda"],
+                    emoji: "🧗"
+                },
+                {
+                    id: 11,
+                    nama: "RTH Brigjen H Hasan Basri",
+                    lokasi: "Kecamatan Pelaihari",
+                    cabor: ["Bola Tangan"],
+                    emoji: "🤾"
+                },
+                {
+                    id: 12,
+                    nama: "Kolam Renang Tirta Kenanga",
+                    lokasi: "Kecamatan Pelaihari",
+                    cabor: ["Renang"],
+                    emoji: "🏊‍♂️"
+                },
+                {
+                    id: 13,
+                    nama: "Lapangan Tenis Baru Matah",
+                    lokasi: "Kecamatan Pelaihari (5 km dari pusat kota)",
+                    cabor: ["Tenis Lapangan"],
+                    emoji: "🎾"
+                },
+                {
+                    id: 14,
+                    nama: "Balairung Tuntung Pandang",
+                    lokasi: "Kecamatan Pelaihari",
+                    cabor: ["Dance Sport", "Bridge"],
+                    emoji: "💃"
+                },
+                {
+                    id: 15,
+                    nama: "Aula Diklat BKPSDM",
+                    lokasi: "Kecamatan Pelaihari",
+                    cabor: ["Angkat Besi", "Angkat Berat"],
+                    emoji: "🏋️"
+                },
+                {
+                    id: 16,
+                    nama: "Aula Snakma",
+                    lokasi: "Kecamatan Pelaihari (2 km)",
+                    cabor: ["Wushu", "Kick Boxing", "Kurash"],
+                    emoji: "🥋"
+                },
+                {
+                    id: 17,
+                    nama: "MAN IC",
+                    lokasi: "Kecamatan Pelaihari (6 km)",
+                    cabor: ["Anggar", "Tenis Meja", "Senam"],
+                    emoji: "🤺"
+                },
+                {
+                    id: 18,
+                    nama: "Desa Panggung",
+                    lokasi: "Kecamatan Pelaihari (6 km)",
+                    cabor: ["Baseball", "Tegball"],
+                    emoji: "⚾"
+                },
+                {
+                    id: 19,
+                    nama: "Kodim Pelaihari",
+                    lokasi: "Kecamatan Pelaihari",
+                    cabor: ["Pencak Silat", "Karate"],
+                    emoji: "🥋"
+                },
+                {
+                    id: 20,
+                    nama: "Sport Center Perdana",
+                    lokasi: "Kecamatan Pelaihari",
+                    cabor: ["Pickle Ball"],
+                    emoji: "🏓"
+                },
+                {
+                    id: 21,
+                    nama: "Aula Kantor Kecamatan Pelaihari",
+                    lokasi: "Kecamatan Pelaihari",
+                    cabor: ["Catur"],
+                    emoji: "♟️"
+                },
+                {
+                    id: 22,
+                    nama: "MTSN 2 Tanahlaut",
+                    lokasi: "Kecamatan Pelaihari",
+                    cabor: ["Hapkido"],
+                    emoji: "🥋"
+                },
+                {
+                    id: 23,
+                    nama: "Islamic Center",
+                    lokasi: "Kecamatan Pelaihari",
+                    cabor: ["Judo"],
+                    emoji: "🥋"
+                },
+                {
+                    id: 24,
+                    nama: "Sirkuit Matah",
+                    lokasi: "Kecamatan Pelaihari (5 km)",
+                    cabor: ["Balap Motor"],
+                    emoji: "🏍️"
+                },
+                {
+                    id: 25,
+                    nama: "Gunung Katunun",
+                    lokasi: "Kecamatan Pelaihari (8 km)",
+                    cabor: ["Paralayang"],
+                    emoji: "🪂"
+                },
+                {
+                    id: 26,
+                    nama: "Lapangan Tenis Pelaihari",
+                    lokasi: "Kecamatan Pelaihari",
+                    cabor: ["Kempo", "Taekwondo", "Takraw"],
+                    emoji: "🥋"
+                },
+                {
+                    id: 27,
+                    nama: "Politala",
+                    lokasi: "Kecamatan Pelaihari (5 km)",
+                    cabor: ["E-Sport"],
+                    emoji: "🎮"
+                },
+                {
+                    id: 28,
+                    nama: "Gunung Kayangan",
+                    lokasi: "Kecamatan Pelaihari (8 km)",
+                    cabor: ["Balap Sepeda"],
+                    emoji: "🚴"
+                },
+                {
+                    id: 29,
+                    nama: "Graha Futsal Atuatu",
+                    lokasi: "Kecamatan Pelaihari",
+                    cabor: ["Biliar"],
+                    emoji: "🎱"
+                }
+            ];
+            localStorage.setItem('porprov-venue', JSON.stringify(dataVenue));
+        }
+
+        // Initialize default services data
+        if (dataLayanan.length === 0) {
+            dataLayanan = [
+                // SEKRETARIAT
+                {
+                    id: 1,
+                    kategori: "SEKRETARIAT",
+                    nama: "H. Ahmad Syukri, S.Pd",
+                    jabatan: "Ketua KONI Tapin",
+                    handphone: "0812-3456-7890",
+                    alamat: "Jl. Ahmad Yani No. 15, Rantau",
+                    email: "ketua@konitapin.org",
+                    emoji: "👨‍💼"
+                },
+                {
+                    id: 2,
+                    kategori: "SEKRETARIAT",
+                    nama: "Dra. Siti Aminah",
+                    jabatan: "Sekretaris Umum",
+                    handphone: "0813-4567-8901",
+                    alamat: "Jl. Pangeran Antasari No. 22, Rantau",
+                    email: "sekretaris@konitapin.org",
+                    emoji: "👩‍💼"
+                },
+                {
+                    id: 3,
+                    kategori: "SEKRETARIAT",
+                    nama: "Ir. Muhammad Ridwan",
+                    jabatan: "Bendahara",
+                    handphone: "0814-5678-9012",
+                    alamat: "Jl. Lambung Mangkurat No. 8, Rantau",
+                    email: "bendahara@konitapin.org",
+                    emoji: "💰"
+                },
+                
+                // TIM KESEHATAN - Regional Kecamatan
+                {
+                    id: 4,
+                    kategori: "TIM KESEHATAN",
+                    nama: "dr. Hendra Wijaya",
+                    jabatan: "Koordinator Medis Regional Rantau",
+                    handphone: "0815-6789-0123",
+                    alamat: "RSUD Rantau, Jl. Ahmad Yani No. 45",
+                    regional: "Kecamatan Rantau",
+                    spesialisasi: "Dokter Umum & Olahraga",
+                    emoji: "👨‍⚕️"
+                },
+                {
+                    id: 5,
+                    kategori: "TIM KESEHATAN",
+                    nama: "dr. Sari Indrawati, Sp.KO",
+                    jabatan: "Dokter Olahraga Regional Binuang",
+                    handphone: "0816-7890-1234",
+                    alamat: "Puskesmas Binuang, Jl. Veteran No. 12",
+                    regional: "Kecamatan Binuang",
+                    spesialisasi: "Kedokteran Olahraga",
+                    emoji: "👩‍⚕️"
+                },
+                {
+                    id: 6,
+                    kategori: "TIM KESEHATAN",
+                    nama: "Ns. Bambang Sutrisno, S.Kep",
+                    jabatan: "Perawat Regional Tapin Utara",
+                    handphone: "0817-8901-2345",
+                    alamat: "Puskesmas Tapin Utara, Jl. Masjid No. 5",
+                    regional: "Kecamatan Tapin Utara",
+                    spesialisasi: "Perawatan Darurat",
+                    emoji: "👨‍⚕️"
+                },
+                {
+                    id: 7,
+                    kategori: "TIM KESEHATAN",
+                    nama: "Apt. Dewi Kartika, S.Farm",
+                    jabatan: "Apoteker Regional Tapin Selatan",
+                    handphone: "0818-9012-3456",
+                    alamat: "Apotek Sehat, Jl. Pahlawan No. 18",
+                    regional: "Kecamatan Tapin Selatan",
+                    spesialisasi: "Farmasi Olahraga",
+                    emoji: "💊"
+                },
+                
+                // KEAMANAN
+                {
+                    id: 8,
+                    kategori: "KEAMANAN",
+                    nama: "Kompol Agus Salim",
+                    jabatan: "Koordinator Keamanan",
+                    handphone: "0819-0123-4567",
+                    alamat: "Polres Tapin, Jl. Ahmad Yani No. 30",
+                    instansi: "Kepolisian Resort Tapin",
+                    emoji: "👮‍♂️"
+                },
+                {
+                    id: 9,
+                    kategori: "KEAMANAN",
+                    nama: "Serda Budi Santoso",
+                    jabatan: "Pengamanan Venue",
+                    handphone: "0820-1234-5678",
+                    alamat: "Kodim 1011 Tapin, Jl. Veteran No. 25",
+                    instansi: "TNI AD Kodim Tapin",
+                    emoji: "🪖"
+                },
+                {
+                    id: 10,
+                    kategori: "KEAMANAN",
+                    nama: "Drs. Hasan Basri",
+                    jabatan: "Koordinator Satpol PP",
+                    handphone: "0821-2345-6789",
+                    alamat: "Kantor Satpol PP Tapin, Jl. Merdeka No. 10",
+                    instansi: "Satuan Polisi Pamong Praja",
+                    emoji: "🛡️"
+                },
+                
+                // TIM MONEV
+                {
+                    id: 11,
+                    kategori: "TIM MONEV",
+                    nama: "Prof. Dr. Ir. Wahyu Hidayat, M.Pd",
+                    jabatan: "Ketua Tim Monitoring & Evaluasi",
+                    handphone: "0822-3456-7890",
+                    alamat: "Universitas Lambung Mangkurat, Banjarmasin",
+                    keahlian: "Manajemen Olahraga",
+                    emoji: "📊"
+                },
+                {
+                    id: 12,
+                    kategori: "TIM MONEV",
+                    nama: "Dr. Rina Sari, M.Si",
+                    jabatan: "Evaluator Teknis",
+                    handphone: "0823-4567-8901",
+                    alamat: "STKIP PGRI Banjarmasin",
+                    keahlian: "Evaluasi Program Olahraga",
+                    emoji: "📋"
+                },
+                {
+                    id: 13,
+                    kategori: "TIM MONEV",
+                    nama: "Drs. Faisal Rahman, M.Pd",
+                    jabatan: "Supervisor Lapangan",
+                    handphone: "0824-5678-9012",
+                    alamat: "Dinas Pemuda & Olahraga Tapin",
+                    keahlian: "Supervisi Kegiatan",
+                    emoji: "🔍"
+                },
+                
+                // TRANSPORTASI
+                {
+                    id: 14,
+                    kategori: "TRANSPORTASI",
+                    nama: "H. Ruslan Effendi",
+                    jabatan: "Koordinator Transportasi",
+                    handphone: "0825-6789-0123",
+                    alamat: "Terminal Rantau, Jl. Terminal No. 1",
+                    armada: "15 Unit Bus & 8 Unit Minibus",
+                    emoji: "🚌"
+                },
+                {
+                    id: 15,
+                    kategori: "TRANSPORTASI",
+                    nama: "Supriadi, S.T",
+                    jabatan: "Dispatcher Utama",
+                    handphone: "0826-7890-1234",
+                    alamat: "Pool Kendaraan KONI, Jl. Industri No. 5",
+                    armada: "Koordinasi 25 Unit Kendaraan",
+                    emoji: "📱"
+                },
+                {
+                    id: 16,
+                    kategori: "TRANSPORTASI",
+                    nama: "Usman Hakim",
+                    jabatan: "Driver Koordinator",
+                    handphone: "0827-8901-2345",
+                    alamat: "Jl. Pasar Baru No. 12, Rantau",
+                    armada: "Tim 20 Driver Berpengalaman",
+                    emoji: "🚗"
+                }
+            ];
+            localStorage.setItem('koni-layanan', JSON.stringify(dataLayanan));
+        }
+
+        // Countdown Timer
+        function updateCountdown() {
+            const targetDate = new Date('2025-03-15T08:00:00').getTime();
+            const now = new Date().getTime();
+            const difference = targetDate - now;
+
+            if (difference > 0) {
+                const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+
+                document.getElementById('days').textContent = days.toString().padStart(2, '0');
+                document.getElementById('hours').textContent = hours.toString().padStart(2, '0');
+                document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
+                document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
+            }
+        }
+
+        // Tab Management
+        function showTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.add('hidden'));
+            document.querySelectorAll('.tab-button').forEach(t => {
+                t.classList.remove('tab-active');
+                t.classList.add('text-gray-600', 'hover:text-blue-600');
+            });
+            document.getElementById('content-' + tabName).classList.remove('hidden');
+            const activeTab = document.getElementById('tab-' + tabName);
+            activeTab.classList.add('tab-active');
+            activeTab.classList.remove('text-gray-600', 'hover:text-blue-600');
+
+            // Load data when switching tabs
+            if (tabName === 'berita') loadBerita();
+            if (tabName === 'medali') loadMedali();
+            if (tabName === 'jadwal') loadJadwal();
+            if (tabName === 'venue') loadVenue();
+            if (tabName === 'layanan') loadLayanan();
+            if (tabName === 'statistik') loadStatistik();
+        }
+
+        // Load Berita
+        function loadBerita() {
+            const container = document.getElementById('daftar-berita');
+            container.innerHTML = '';
+            
+            dataBerita.forEach(berita => {
+                const div = document.createElement('div');
+                div.className = 'bg-white rounded-lg shadow-md p-6 card-hover';
+                div.innerHTML = `
+                    <div class="flex justify-between items-start mb-3">
+                        <span class="inline-block bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium">${berita.kategori}</span>
+                        <span class="text-gray-500 text-sm">${berita.tanggal}</span>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3 text-gray-800">${berita.judul}</h3>
+                    <p class="text-gray-600 mb-4">${berita.ringkasan}</p>
+                    <button onclick="showBeritaDetail(${berita.id})" class="text-blue-600 hover:text-blue-800 font-medium">Baca Selengkapnya →</button>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        // Load Berita Preview for Homepage
+        function loadBeritaPreview() {
+            const container = document.getElementById('berita-preview');
+            container.innerHTML = '';
+            
+            dataBerita.slice(0, 3).forEach(berita => {
+                const div = document.createElement('div');
+                div.className = 'border-l-4 border-blue-500 pl-4';
+                div.innerHTML = `
+                    <h4 class="font-bold text-gray-800 mb-1">${berita.judul}</h4>
+                    <p class="text-gray-600 text-sm mb-2">${berita.ringkasan}</p>
+                    <div class="flex justify-between items-center">
+                        <span class="text-xs text-gray-500">${berita.tanggal}</span>
+                        <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs">${berita.kategori}</span>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        // Show Berita Detail
+        function showBeritaDetail(id) {
+            const berita = dataBerita.find(b => b.id === id);
+            if (!berita) return;
+            
+            alert(`${berita.judul}\n\n${berita.isi}\n\nTanggal: ${berita.tanggal}\nKategori: ${berita.kategori}`);
+        }
+
+        // Filter Berita
+        function filterBerita(kategori) {
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('bg-blue-600', 'text-white');
+                btn.classList.add('bg-gray-200', 'text-gray-700');
+            });
+            event.target.classList.remove('bg-gray-200', 'text-gray-700');
+            event.target.classList.add('bg-blue-600', 'text-white');
+            
+            const container = document.getElementById('daftar-berita');
+            container.innerHTML = '';
+            
+            const filteredBerita = kategori === 'SEMUA' ? dataBerita : dataBerita.filter(b => b.kategori === kategori);
+            
+            filteredBerita.forEach(berita => {
+                const div = document.createElement('div');
+                div.className = 'bg-white rounded-lg shadow-md p-6 card-hover';
+                div.innerHTML = `
+                    <div class="flex justify-between items-start mb-3">
+                        <span class="inline-block bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium">${berita.kategori}</span>
+                        <span class="text-gray-500 text-sm">${berita.tanggal}</span>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3 text-gray-800">${berita.judul}</h3>
+                    <p class="text-gray-600 mb-4">${berita.ringkasan}</p>
+                    <button onclick="showBeritaDetail(${berita.id})" class="text-blue-600 hover:text-blue-800 font-medium">Baca Selengkapnya →</button>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        // Load Medali
+        function loadMedali() {
+            const tbody = document.getElementById('tabel-medali');
+            tbody.innerHTML = '';
+            
+            // Sort by total medals, then by gold medals
+            const sortedData = Object.entries(dataMedali).sort((a, b) => {
+                const totalA = a[1].emas + a[1].perak + a[1].perunggu;
+                const totalB = b[1].emas + b[1].perak + b[1].perunggu;
+                return totalB - totalA || b[1].emas - a[1].emas;
+            });
+            
+            sortedData.forEach(([kabupaten, medali], index) => {
+                const total = medali.emas + medali.perak + medali.perunggu;
+                const tr = document.createElement('tr');
+                tr.className = 'border-b hover:bg-gray-50';
+                
+                let rankClass = '';
+                if (index === 0) rankClass = 'text-yellow-600 font-bold';
+                else if (index === 1) rankClass = 'text-gray-500 font-bold';
+                else if (index === 2) rankClass = 'text-orange-600 font-bold';
+                
+                tr.innerHTML = `
+                    <td class="px-6 py-4 font-bold ${rankClass}">${index + 1}</td>
+                    <td class="px-6 py-4 font-semibold">${kabupaten}</td>
+                    <td class="px-6 py-4 text-center font-bold text-yellow-600">${medali.emas}</td>
+                    <td class="px-6 py-4 text-center font-bold text-gray-500">${medali.perak}</td>
+                    <td class="px-6 py-4 text-center font-bold text-orange-600">${medali.perunggu}</td>
+                    <td class="px-6 py-4 text-center font-bold text-lg">${total}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+            
+            // Update homepage top 3
+            updateTop3();
+        }
+
+        // Update Top 3 for Homepage
+        function updateTop3() {
+            const sortedData = Object.entries(dataMedali).sort((a, b) => {
+                const totalA = a[1].emas + a[1].perak + a[1].perunggu;
+                const totalB = b[1].emas + b[1].perak + b[1].perunggu;
+                return totalB - totalA || b[1].emas - a[1].emas;
+            });
+            
+            if (sortedData.length >= 3) {
+                document.getElementById('rank-1-name').textContent = sortedData[0][0];
+                document.getElementById('rank-1-total').textContent = sortedData[0][1].emas + sortedData[0][1].perak + sortedData[0][1].perunggu;
+                
+                document.getElementById('rank-2-name').textContent = sortedData[1][0];
+                document.getElementById('rank-2-total').textContent = sortedData[1][1].emas + sortedData[1][1].perak + sortedData[1][1].perunggu;
+                
+                document.getElementById('rank-3-name').textContent = sortedData[2][0];
+                document.getElementById('rank-3-total').textContent = sortedData[2][1].emas + sortedData[2][1].perak + sortedData[2][1].perunggu;
+            }
+        }
+
+        // Load Jadwal
+        function loadJadwal() {
+            const container = document.getElementById('daftar-jadwal');
+            container.innerHTML = '';
+            
+            // Sort by date
+            const sortedJadwal = [...dataJadwal].sort((a, b) => new Date(a.tanggal) - new Date(b.tanggal));
+            
+            sortedJadwal.forEach(jadwal => {
+                const div = document.createElement('div');
+                div.className = 'bg-white rounded-lg shadow-md p-6 card-hover';
+                div.innerHTML = `
+                    <div class="flex justify-between items-start mb-3">
+                        <h3 class="text-lg font-bold text-gray-800">${jadwal.cabor}</h3>
+                        ${jadwal.keterangan ? `<span class="bg-red-100 text-red-800 px-2 py-1 rounded text-sm font-medium">${jadwal.keterangan}</span>` : ''}
+                    </div>
+                    <div class="space-y-2 text-gray-600">
+                        <p>📅 ${new Date(jadwal.tanggal).toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</p>
+                        ${jadwal.waktu ? `<p>⏰ ${jadwal.waktu} WIB</p>` : ''}
+                        <p>📍 ${jadwal.venue}</p>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        // Filter Jadwal
+        function filterJadwal() {
+            const filterDate = document.getElementById('filter-tanggal').value;
+            if (!filterDate) return;
+            
+            const container = document.getElementById('daftar-jadwal');
+            container.innerHTML = '';
+            
+            const filteredJadwal = dataJadwal.filter(j => j.tanggal === filterDate);
+            
+            filteredJadwal.forEach(jadwal => {
+                const div = document.createElement('div');
+                div.className = 'bg-white rounded-lg shadow-md p-6 card-hover';
+                div.innerHTML = `
+                    <div class="flex justify-between items-start mb-3">
+                        <h3 class="text-lg font-bold text-gray-800">${jadwal.cabor}</h3>
+                        ${jadwal.keterangan ? `<span class="bg-red-100 text-red-800 px-2 py-1 rounded text-sm font-medium">${jadwal.keterangan}</span>` : ''}
+                    </div>
+                    <div class="space-y-2 text-gray-600">
+                        <p>📅 ${new Date(jadwal.tanggal).toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</p>
+                        ${jadwal.waktu ? `<p>⏰ ${jadwal.waktu} WIB</p>` : ''}
+                        <p>📍 ${jadwal.venue}</p>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        // Reset Filter Jadwal
+        function resetFilterJadwal() {
+            document.getElementById('filter-tanggal').value = '';
+            loadJadwal();
+        }
+
+        // Load Venue
+        function loadVenue() {
+            const container = document.getElementById('daftar-venue');
+            container.innerHTML = '';
+            
+            dataVenue.forEach(venue => {
+                const div = document.createElement('div');
+                div.className = 'bg-white rounded-lg shadow-md p-6 card-hover';
+                div.innerHTML = `
+                    <div class="flex items-start mb-4">
+                        <span class="text-3xl mr-3">${venue.emoji}</span>
+                        <div class="flex-1">
+                            <h3 class="text-lg font-bold text-gray-800 mb-1">${venue.nama}</h3>
+                            <p class="text-gray-600 text-sm mb-3">📍 ${venue.lokasi}</p>
+                        </div>
+                    </div>
+                    <div class="space-y-2">
+                        <p class="text-sm font-medium text-gray-700">Cabang Olahraga:</p>
+                        <div class="flex flex-wrap gap-1">
+                            ${venue.cabor.map(cabor => `<span class="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs font-medium">${cabor}</span>`).join('')}
+                        </div>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        // Search Venue
+        function searchVenue() {
+            const searchTerm = document.getElementById('search-venue').value.toLowerCase();
+            const container = document.getElementById('daftar-venue');
+            container.innerHTML = '';
+            
+            const filteredVenue = dataVenue.filter(venue => 
+                venue.nama.toLowerCase().includes(searchTerm) ||
+                venue.lokasi.toLowerCase().includes(searchTerm) ||
+                venue.cabor.some(cabor => cabor.toLowerCase().includes(searchTerm))
+            );
+            
+            filteredVenue.forEach(venue => {
+                const div = document.createElement('div');
+                div.className = 'bg-white rounded-lg shadow-md p-6 card-hover';
+                div.innerHTML = `
+                    <div class="flex items-start mb-4">
+                        <span class="text-3xl mr-3">${venue.emoji}</span>
+                        <div class="flex-1">
+                            <h3 class="text-lg font-bold text-gray-800 mb-1">${venue.nama}</h3>
+                            <p class="text-gray-600 text-sm mb-3">📍 ${venue.lokasi}</p>
+                        </div>
+                    </div>
+                    <div class="space-y-2">
+                        <p class="text-sm font-medium text-gray-700">Cabang Olahraga:</p>
+                        <div class="flex flex-wrap gap-1">
+                            ${venue.cabor.map(cabor => `<span class="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs font-medium">${cabor}</span>`).join('')}
+                        </div>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        // Load Layanan
+        function loadLayanan() {
+            const container = document.getElementById('daftar-layanan');
+            container.innerHTML = '';
+            
+            dataLayanan.forEach(layanan => {
+                const div = document.createElement('div');
+                div.className = 'bg-white rounded-lg shadow-md p-6 card-hover';
+                
+                let additionalInfo = '';
+                if (layanan.regional) additionalInfo += `<p class="text-sm text-gray-600 mb-1">🏥 Regional: ${layanan.regional}</p>`;
+                if (layanan.spesialisasi) additionalInfo += `<p class="text-sm text-gray-600 mb-1">⚕️ Spesialisasi: ${layanan.spesialisasi}</p>`;
+                if (layanan.instansi) additionalInfo += `<p class="text-sm text-gray-600 mb-1">🏢 Instansi: ${layanan.instansi}</p>`;
+                if (layanan.keahlian) additionalInfo += `<p class="text-sm text-gray-600 mb-1">🎯 Keahlian: ${layanan.keahlian}</p>`;
+                if (layanan.armada) additionalInfo += `<p class="text-sm text-gray-600 mb-1">🚗 Armada: ${layanan.armada}</p>`;
+                if (layanan.email) additionalInfo += `<p class="text-sm text-gray-600 mb-1">📧 Email: ${layanan.email}</p>`;
+                
+                div.innerHTML = `
+                    <div class="flex items-start mb-4">
+                        <span class="text-3xl mr-3">${layanan.emoji}</span>
+                        <div class="flex-1">
+                            <div class="flex justify-between items-start mb-2">
+                                <h3 class="text-lg font-bold text-gray-800">${layanan.nama}</h3>
+                                <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs font-medium">${layanan.kategori}</span>
+                            </div>
+                            <p class="text-blue-600 font-medium mb-2">${layanan.jabatan}</p>
+                        </div>
+                    </div>
+                    <div class="space-y-1 mb-4">
+                        <p class="text-sm text-gray-600">📱 ${layanan.handphone}</p>
+                        <p class="text-sm text-gray-600">📍 ${layanan.alamat}</p>
+                        ${additionalInfo}
+                    </div>
+                    <div class="flex gap-2">
+                        <a href="tel:${layanan.handphone}" class="flex-1 bg-green-500 hover:bg-green-600 text-white px-3 py-2 rounded text-sm text-center font-medium">
+                            📞 Telepon
+                        </a>
+                        <a href="https://wa.me/62${layanan.handphone.substring(1)}" target="_blank" rel="noopener noreferrer" class="flex-1 bg-green-600 hover:bg-green-700 text-white px-3 py-2 rounded text-sm text-center font-medium">
+                            💬 WhatsApp
+                        </a>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        // Filter Layanan
+        function filterLayanan(kategori) {
+            document.querySelectorAll('.filter-layanan-btn').forEach(btn => {
+                btn.classList.remove('bg-blue-600', 'text-white');
+                btn.classList.add('bg-gray-200', 'text-gray-700');
+            });
+            event.target.classList.remove('bg-gray-200', 'text-gray-700');
+            event.target.classList.add('bg-blue-600', 'text-white');
+            
+            const container = document.getElementById('daftar-layanan');
+            container.innerHTML = '';
+            
+            const filteredLayanan = kategori === 'SEMUA' ? dataLayanan : dataLayanan.filter(l => l.kategori === kategori);
+            
+            filteredLayanan.forEach(layanan => {
+                const div = document.createElement('div');
+                div.className = 'bg-white rounded-lg shadow-md p-6 card-hover';
+                
+                let additionalInfo = '';
+                if (layanan.regional) additionalInfo += `<p class="text-sm text-gray-600 mb-1">🏥 Regional: ${layanan.regional}</p>`;
+                if (layanan.spesialisasi) additionalInfo += `<p class="text-sm text-gray-600 mb-1">⚕️ Spesialisasi: ${layanan.spesialisasi}</p>`;
+                if (layanan.instansi) additionalInfo += `<p class="text-sm text-gray-600 mb-1">🏢 Instansi: ${layanan.instansi}</p>`;
+                if (layanan.keahlian) additionalInfo += `<p class="text-sm text-gray-600 mb-1">🎯 Keahlian: ${layanan.keahlian}</p>`;
+                if (layanan.armada) additionalInfo += `<p class="text-sm text-gray-600 mb-1">🚗 Armada: ${layanan.armada}</p>`;
+                if (layanan.email) additionalInfo += `<p class="text-sm text-gray-600 mb-1">📧 Email: ${layanan.email}</p>`;
+                
+                div.innerHTML = `
+                    <div class="flex items-start mb-4">
+                        <span class="text-3xl mr-3">${layanan.emoji}</span>
+                        <div class="flex-1">
+                            <div class="flex justify-between items-start mb-2">
+                                <h3 class="text-lg font-bold text-gray-800">${layanan.nama}</h3>
+                                <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs font-medium">${layanan.kategori}</span>
+                            </div>
+                            <p class="text-blue-600 font-medium mb-2">${layanan.jabatan}</p>
+                        </div>
+                    </div>
+                    <div class="space-y-1 mb-4">
+                        <p class="text-sm text-gray-600">📱 ${layanan.handphone}</p>
+                        <p class="text-sm text-gray-600">📍 ${layanan.alamat}</p>
+                        ${additionalInfo}
+                    </div>
+                    <div class="flex gap-2">
+                        <a href="tel:${layanan.handphone}" class="flex-1 bg-green-500 hover:bg-green-600 text-white px-3 py-2 rounded text-sm text-center font-medium">
+                            📞 Telepon
+                        </a>
+                        <a href="https://wa.me/62${layanan.handphone.substring(1)}" target="_blank" rel="noopener noreferrer" class="flex-1 bg-green-600 hover:bg-green-700 text-white px-3 py-2 rounded text-sm text-center font-medium">
+                            💬 WhatsApp
+                        </a>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        // Load Statistik
+        function loadStatistik() {
+            let totalEmas = 0, totalPerak = 0, totalPerunggu = 0;
+            
+            Object.values(dataMedali).forEach(medali => {
+                totalEmas += medali.emas;
+                totalPerak += medali.perak;
+                totalPerunggu += medali.perunggu;
+            });
+            
+            document.getElementById('stat-total-emas').textContent = totalEmas;
+            document.getElementById('stat-total-perak').textContent = totalPerak;
+            document.getElementById('stat-total-perunggu').textContent = totalPerunggu;
+        }
+
+        // Update Total Stats
+        function updateTotalStats() {
+            let totalMedali = 0;
+            Object.values(dataMedali).forEach(medali => {
+                totalMedali += medali.emas + medali.perak + medali.perunggu;
+            });
+            
+            document.getElementById('total-medali').textContent = totalMedali;
+            document.getElementById('total-venue').textContent = dataVenue.length;
+        }
+
+        // Initialize
+        document.getElementById('current-date').textContent = new Date().toLocaleDateString('id-ID', {
+            weekday: 'long',
+            day: 'numeric',
+            month: 'long',
+            year: 'numeric'
+        });
+
+        // Start countdown timer
+        setInterval(updateCountdown, 1000);
+        updateCountdown();
+
+        // Load initial data
+        loadBeritaPreview();
+        loadMedali();
+        updateTotalStats();
+
+        // Search venue on Enter key
+        document.getElementById('search-venue').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                searchVenue();
+            }
+        });
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'98535e61a776f8e0',t:'MTc1ODg5NjA3Ny4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
