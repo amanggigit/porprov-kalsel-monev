@@ -218,6 +218,35 @@
                         <label class="block text-sm font-medium text-gray-700 mb-2">🥇 Nama Pemenang/Skor Hasil</label>
                         <textarea id="hasilPertandingan" rows="3" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Contoh: Juara 1: Tim Banjarmasin (Skor: 3-1), Juara 2: Tim Banjarbaru" required></textarea>
                     </div>
+                    
+                    <!-- Medal Section -->
+                    <div class="md:col-span-2">
+                        <label class="block text-sm font-medium text-gray-700 mb-4">🏅 Perolehan Medali</label>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div class="bg-gradient-to-r from-yellow-400 to-yellow-500 rounded-lg p-4 text-white shadow-lg">
+                                <div class="flex items-center justify-between mb-2">
+                                    <span class="text-sm font-medium">🥇 Emas</span>
+                                    <span class="text-2xl">🥇</span>
+                                </div>
+                                <input type="text" id="medaliEmas" class="w-full px-3 py-2 border-0 rounded-md text-gray-800 focus:ring-2 focus:ring-yellow-300" placeholder="Nama Pemenang Emas">
+                            </div>
+                            <div class="bg-gradient-to-r from-gray-400 to-gray-500 rounded-lg p-4 text-white shadow-lg">
+                                <div class="flex items-center justify-between mb-2">
+                                    <span class="text-sm font-medium">🥈 Perak</span>
+                                    <span class="text-2xl">🥈</span>
+                                </div>
+                                <input type="text" id="medaliPerak" class="w-full px-3 py-2 border-0 rounded-md text-gray-800 focus:ring-2 focus:ring-gray-300" placeholder="Nama Pemenang Perak">
+                            </div>
+                            <div class="bg-gradient-to-r from-amber-600 to-amber-700 rounded-lg p-4 text-white shadow-lg">
+                                <div class="flex items-center justify-between mb-2">
+                                    <span class="text-sm font-medium">🥉 Perunggu</span>
+                                    <span class="text-2xl">🥉</span>
+                                </div>
+                                <input type="text" id="medaliPerunggu" class="w-full px-3 py-2 border-0 rounded-md text-gray-800 focus:ring-2 focus:ring-amber-300" placeholder="Nama Pemenang Perunggu">
+                            </div>
+                        </div>
+                    </div>
+                    
                     <div class="md:col-span-2">
                         <label class="block text-sm font-medium text-gray-700 mb-2">📂 Link Dokumen Hasil (Opsional)</label>
                         <input type="url" id="dokumen" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="https://drive.google.com/file/d/...">
@@ -340,10 +369,13 @@
 
             <!-- Data Table -->
             <div class="bg-white rounded-lg shadow-md overflow-hidden">
-                <div class="px-6 py-4 border-b border-gray-200">
+                <div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
                     <h2 class="text-xl font-semibold text-gray-800 flex items-center">
                         📋 Data Monitoring
                     </h2>
+                    <button id="btnRefreshData" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm transition duration-200 flex items-center">
+                        🔄 Refresh Data
+                    </button>
                 </div>
                 <div class="overflow-x-auto">
                     <table class="min-w-full divide-y divide-gray-200">
@@ -629,7 +661,7 @@
     <script>
         // KONFIGURASI GOOGLE SHEETS
         // GANTI URL INI DENGAN URL APPS SCRIPT ANDA
-        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxu8l3MpPxpQYv0QSnIq7NRxmkfhb-GyfRjAo1u2izkh7zeOw1vHTIlrW61MtvFkDCK6g/exec';
+        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby1Df4n2cXvxqPFq7ln6yQLJNNmWOfrkocUDJhKO0a-v3IuvM7_PHjCK9nJB6KHi0_ohA/exec';
         
         // Data lokal (akan dimuat dari Google Sheets)
         let allReports = [];
@@ -665,11 +697,11 @@
                 showNotification('📤 Mengirim ke Google Sheets...');
                 
                 // Pastikan URL sudah diisi
-                if (GOOGLE_SCRIPT_URL === 'https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec') {
-                    throw new Error('URL Google Apps Script belum diatur');
+                if (GOOGLE_SCRIPT_URL.includes('YOUR_ACTUAL_SCRIPT_ID_HERE')) {
+                    throw new Error('URL Google Apps Script belum diatur dengan benar');
                 }
                 
-                // Format data sesuai dengan yang diharapkan Apps Script
+                // Format data sebagai FormData untuk POST request
                 const formData = new FormData();
                 formData.append('action', 'addReport');
                 formData.append('id', data.id || Date.now());
@@ -683,6 +715,9 @@
                 formData.append('jumlahPeserta', data.jumlahPeserta || 0);
                 formData.append('jumlahPertandingan', data.jumlahPertandingan || 0);
                 formData.append('hasilPertandingan', data.hasilPertandingan || '');
+                formData.append('medaliEmas', data.medaliEmas || '');
+                formData.append('medaliPerak', data.medaliPerak || '');
+                formData.append('medaliPerunggu', data.medaliPerunggu || '');
                 formData.append('catatanTeknis', data.catatanTeknis || '');
                 formData.append('catatanKendala', data.catatanKendala || '');
                 formData.append('rekomendasi', data.rekomendasi || '');
@@ -703,8 +738,20 @@
                 if (response.ok) {
                     const result = await response.text();
                     console.log('Response text:', result);
-                    showNotification('✅ Data berhasil disimpan ke Google Sheets!');
-                    return true;
+                    
+                    try {
+                        const jsonResult = JSON.parse(result);
+                        if (jsonResult.success) {
+                            showNotification('✅ Data berhasil disimpan ke Google Sheets!');
+                            return true;
+                        } else {
+                            throw new Error(jsonResult.error || 'Unknown error from server');
+                        }
+                    } catch (parseError) {
+                        // Jika response bukan JSON, anggap berhasil jika status OK
+                        showNotification('✅ Data berhasil disimpan ke Google Sheets!');
+                        return true;
+                    }
                 } else {
                     throw new Error(`HTTP ${response.status}: ${response.statusText}`);
                 }
@@ -925,6 +972,9 @@
                     jumlahPeserta: parseInt(document.getElementById('jumlahPeserta').value) || 0,
                     jumlahPertandingan: parseInt(document.getElementById('jumlahPertandingan').value) || 0,
                     hasilPertandingan: document.getElementById('hasilPertandingan').value,
+                    medaliEmas: document.getElementById('medaliEmas').value || '',
+                    medaliPerak: document.getElementById('medaliPerak').value || '',
+                    medaliPerunggu: document.getElementById('medaliPerunggu').value || '',
                     catatanTeknis: document.getElementById('catatanTeknis').value,
                     catatanKendala: document.getElementById('catatanKendala').value || '',
                     rekomendasi: document.getElementById('rekomendasi').value,
@@ -935,24 +985,35 @@
                 
                 console.log('Sending data to Google Sheets:', reportData); // Debug log
                 
-                // Kirim ke Google Sheets dengan format yang benar
-                const success = await sendToGoogleSheets(reportData);
-                
-                // Simpan lokal sebagai backup
+                // SELALU simpan lokal terlebih dahulu agar data langsung tampil
                 addNewReport(reportData);
                 
-                if (success) {
-                    alert('✅ Laporan Monev berhasil dikirim ke Google Sheets!\n\nTerima kasih atas kontribusi Anda dalam monitoring PORPROV KALSEL.');
-                } else {
-                    alert('⚠️ Laporan disimpan lokal. Periksa koneksi internet dan URL Google Apps Script.\n\nTerima kasih atas kontribusi Anda dalam monitoring PORPROV KALSEL.');
+                // Kirim ke Google Sheets sebagai backup
+                let success = false;
+                if (isOnline && !GOOGLE_SCRIPT_URL.includes('YOUR_ACTUAL_SCRIPT_ID_HERE')) {
+                    success = await sendToGoogleSheets(reportData);
                 }
+                
+                if (success) {
+                    showNotification('✅ Data tersimpan lokal dan berhasil dikirim ke Google Sheets!');
+                } else if (!isOnline) {
+                    showNotification('📱 Data tersimpan lokal (mode offline)');
+                } else {
+                    showNotification('💾 Data tersimpan lokal. Periksa URL Google Apps Script untuk sinkronisasi.');
+                }
+                
+                alert('✅ Laporan Monev berhasil disimpan!\n\nData sudah tersimpan dan dapat dilihat di tab Rekap Data.\n\nTerima kasih atas kontribusi Anda dalam monitoring PORPROV KALSEL.');
                 
                 // Clear form and localStorage
                 this.reset();
                 localStorage.removeItem('monevData');
                 updateStatus();
                 
-                // Refresh data display
+                // Set tanggal ke hari ini lagi
+                const today = new Date().toISOString().split('T')[0];
+                document.getElementById('tanggal').value = today;
+                
+                // Refresh data display jika sedang di tab rekap
                 if (document.getElementById('rekapContent').classList.contains('active')) {
                     loadRekapData();
                 }
@@ -1257,6 +1318,11 @@ Jumlah Peserta: ${report.jumlahPeserta}
 HASIL PERTANDINGAN:
 ${report.hasilPertandingan}
 
+PEROLEHAN MEDALI:
+🥇 Emas: ${report.medaliEmas || '-'}
+🥈 Perak: ${report.medaliPerak || '-'}
+🥉 Perunggu: ${report.medaliPerunggu || '-'}
+
 CATATAN TEKNIS:
 ${report.catatanTeknis}
 
@@ -1312,16 +1378,23 @@ Unit: ${report.unitAsal || '-'}
         // Add new report to data
         function addNewReport(formData) {
             const newReport = {
-                id: allReports.length + 1,
+                id: Date.now(), // Gunakan timestamp sebagai ID unik
                 ...formData,
-                timestamp: new Date().toISOString()
+                timestamp: formData.timestamp || new Date().toISOString()
             };
             
+            // Tambahkan ke array
             allReports.push(newReport);
             filteredReports = [...allReports];
             
             // Save to localStorage
             localStorage.setItem('allReports', JSON.stringify(allReports));
+            
+            // Update statistik langsung
+            updateStatistics();
+            
+            console.log('Data berhasil ditambahkan:', newReport);
+            console.log('Total laporan sekarang:', allReports.length);
         }
 
         // Load reports from localStorage
@@ -1347,6 +1420,10 @@ Unit: ${report.unitAsal || '-'}
         });
         document.getElementById('btnExportPDF').addEventListener('click', exportToPDF);
         document.getElementById('btnExportJSON').addEventListener('click', exportToJSON);
+        document.getElementById('btnRefreshData').addEventListener('click', () => {
+            loadRekapData();
+            showNotification('🔄 Data berhasil di-refresh!');
+        });
 
         // Initialize
         document.addEventListener('DOMContentLoaded', async function() {
@@ -1378,10 +1455,5 @@ Unit: ${report.unitAsal || '-'}
             document.body.appendChild(statusIndicator);
         });
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'987bfc96d4ed3fb9',t:'MTc1OTMyMTk4OC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'987c502d751b6112',t:'MTc1OTMyNTQxMS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
-
-
-
-
-
